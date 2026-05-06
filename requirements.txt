@@ -1,0 +1,19 @@
+# Document loading & text splitting
+
+langchain>=0.2.0
+langchain-community>=0.2.0
+
+# PDF parser
+pypdf>=4.0.0                         
+
+# Vector store (local, no server required)
+chromadb>=0.5.0
+
+# Embeddings + reranker
+sentence-transformers>=3.0.0         
+
+# Local LLM via Ollama
+ollama>=0.2.0                     
+
+# Web UI
+streamlit>=1.35.0
