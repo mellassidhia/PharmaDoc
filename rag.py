@@ -28,6 +28,7 @@ Rules:
 _embeddings = HuggingFaceEmbeddings(
     model_name=EMBED_MODEL,
     model_kwargs={"device": "cpu"},
+    #model_kwargs={"device": "cuda"},
     encode_kwargs={"normalize_embeddings": True},
 )
 

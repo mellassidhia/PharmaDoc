@@ -5,13 +5,14 @@ st.set_page_config(page_title="PharmaDoc", layout="centered")
 
 st.markdown("""
 <style>
-    .stApp { background-color: #f8f9fa; }
-    .header { padding: 1.5rem 0 0.5rem 0; border-bottom: 2px solid #1a3c5e; margin-bottom: 1.5rem; }
-    .header h1 { color: #1a3c5e; font-size: 1.6rem; font-weight: 700; margin: 0; }
-    .header p { color: #555; font-size: 0.85rem; margin: 4px 0 0 0; }
+    .stApp { background-color: #1a1d27; color: #e8e8e8; }
+    [data-testid="stSidebar"] { background-color: #12141e; }
+    .header { padding: 1.5rem 0 0.5rem 0; border-bottom: 2px solid #2e4a6e; margin-bottom: 1.5rem; }
+    .header h1 { color: #7bafd4; font-size: 1.6rem; font-weight: 700; margin: 0; }
+    .header p { color: #888; font-size: 0.85rem; margin: 4px 0 0 0; }
     .user-bubble {
-        background: #1a3c5e;
-        color: #ffffff;
+        background: #1e3a5f;
+        color: #e8f0fe;
         border-radius: 16px 16px 4px 16px;
         padding: 10px 16px;
         margin: 8px 0 8px 20%;
@@ -19,9 +20,9 @@ st.markdown("""
         line-height: 1.6;
     }
     .bot-bubble {
-        background: #ffffff;
-        color: #1a1a1a;
-        border: 1px solid #dde3ea;
+        background: #22263a;
+        color: #e8e8e8;
+        border: 1px solid #2e3550;
         border-radius: 16px 16px 16px 4px;
         padding: 10px 16px;
         margin: 8px 20% 8px 0;
@@ -30,13 +31,25 @@ st.markdown("""
     }
     .source-line {
         font-size: 0.75rem;
-        color: #1a3c5e;
+        color: #7bafd4;
         margin: 2px 0 8px 4px;
     }
     .stTextInput > div > div > input {
+        background-color: #22263a !important;
+        color: #e8e8e8 !important;
+        border: 1px solid #2e3550 !important;
         border-radius: 8px;
-        border: 1px solid #ccd3db;
         font-size: 0.9rem;
+    }
+    .stButton > button {
+        background-color: #1e3a5f;
+        color: #e8f0fe;
+        border: 1px solid #2e4a6e;
+        border-radius: 8px;
+    }
+    .stButton > button:hover {
+        background-color: #2e4a6e;
+        border-color: #7bafd4;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -44,7 +57,7 @@ st.markdown("""
 st.markdown("""
 <div class="header">
     <h1>PharmaDoc</h1>
-    <p>Clinical document assistant for pharmacists</p>
+    <p>Clinical document assistant for pharmacists — French and English supported</p>
 </div>
 """, unsafe_allow_html=True)
 
