@@ -1,5 +1,5 @@
 import streamlit as st
-from rag import answer
+from agent import run
 
 st.set_page_config(page_title="PharmaDoc", layout="centered")
 
@@ -29,6 +29,18 @@ st.markdown("""
         font-size: 0.9rem;
         line-height: 1.6;
     }
+    .tool-badge {
+        display: inline-block;
+        font-size: 0.72rem;
+        padding: 2px 10px;
+        border-radius: 10px;
+        margin: 3px 0 6px 4px;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+    }
+    .badge-search_docs     { background: #162032; color: #7bafd4; border: 1px solid #1e3a5f; }
+    .badge-calculate_dose  { background: #1a2e1a; color: #7dd47d; border: 1px solid #2a4a2a; }
+    .badge-direct_answer   { background: #2a2416; color: #d4b87d; border: 1px solid #4a3a1a; }
     .source-line {
         font-size: 0.75rem;
         color: #7bafd4;
@@ -57,9 +69,15 @@ st.markdown("""
 st.markdown("""
 <div class="header">
     <h1>PharmaDoc</h1>
-    <p>Clinical document assistant for pharmacists — French and English supported</p>
+    <p>Agentic clinical assistant for pharmacists — French and English supported</p>
 </div>
 """, unsafe_allow_html=True)
+
+TOOL_LABELS = {
+    "search_docs":    "Document Search",
+    "calculate_dose": "Dose Calculator",
+    "direct_answer":  "Direct Answer",
+}
 
 if "history" not in st.session_state:
     st.session_state.history = []
@@ -68,9 +86,15 @@ if "memory" not in st.session_state:
 
 with st.sidebar:
     st.markdown("**PharmaDoc**")
+    st.markdown("Mode: Agentic RAG")
     st.markdown("Model: Llama 3.2")
     st.markdown("Memory: last 3 exchanges")
     st.markdown("Languages: French / English")
+    st.divider()
+    st.markdown("**Agent Tools**")
+    st.markdown("- Document Search")
+    st.markdown("- Dose Calculator")
+    st.markdown("- Direct Answer")
     st.divider()
     if st.button("Clear conversation"):
         st.session_state.history = []
@@ -79,10 +103,15 @@ with st.sidebar:
     st.divider()
     st.caption("Place pharmaceutical PDFs in the docs/ folder and run ingest.py to index them.")
 
-for role, text, sources in st.session_state.history:
+for role, text, sources, tool in st.session_state.history:
     if role == "user":
         st.markdown(f'<div class="user-bubble">{text}</div>', unsafe_allow_html=True)
     else:
+        label = TOOL_LABELS.get(tool, tool)
+        st.markdown(
+            f'<div class="tool-badge badge-{tool}">Tool: {label}</div>',
+            unsafe_allow_html=True,
+        )
         st.markdown(f'<div class="bot-bubble">{text}</div>', unsafe_allow_html=True)
         if sources:
             src_text = " &nbsp;|&nbsp; ".join(sources)
@@ -93,7 +122,7 @@ with st.form("chat_form", clear_on_submit=True):
     with col1:
         user_input = st.text_input(
             "question",
-            placeholder="Ex: Quelles sont les contre-indications de la metformine ?",
+            placeholder="Ex: Dose paracetamol 70kg ? / Contre-indications metformine ?",
             label_visibility="collapsed",
         )
     with col2:
@@ -101,9 +130,11 @@ with st.form("chat_form", clear_on_submit=True):
 
 if submitted and user_input.strip():
     question = user_input.strip()
-    st.session_state.history.append(("user", question, []))
-    with st.spinner("Searching documents ..."):
-        result = answer(question, st.session_state.memory)
-    st.session_state.history.append(("assistant", result["answer"], result["sources"]))
+    st.session_state.history.append(("user", question, [], ""))
+    with st.spinner("Agent is thinking ..."):
+        result = run(question, st.session_state.memory)
+    st.session_state.history.append(
+        ("assistant", result["answer"], result["sources"], result["tool"])
+    )
     st.session_state.memory.append({"question": question, "answer": result["answer"]})
     st.rerun()
